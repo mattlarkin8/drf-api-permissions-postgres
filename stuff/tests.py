@@ -78,3 +78,11 @@ class StuffTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         stuff = Stuff.objects.all()
         self.assertEqual(len(stuff), 0)
+
+    def test_create_stuff_fails_without_login(self):
+        url = reverse("stuff_list")
+        data = {"owner": 1, "name": "car", "description": "Drives on the road"}
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        stuff = Stuff.objects.all()
+        self.assertEqual(len(stuff), 1)
